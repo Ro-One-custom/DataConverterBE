@@ -1,11 +1,5 @@
 const mongoose = require('mongoose')
 
-
-const headerArrSchema = new mongoose.Schema({
-
-    header: { type: String }
-})
-
 const headerSchema = new mongoose.Schema({
 
     name: {
@@ -18,7 +12,11 @@ const headerSchema = new mongoose.Schema({
 
     headers: [{
         type: String
-    }]
+    }],
+
+    format: {
+        type:String
+    }
 
 })
 
