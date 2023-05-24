@@ -1,15 +1,18 @@
 const express = require('express')
-const mongoose = require('mongoose')
+// const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express()
+const session = require('express-session');
+const flash = require('connect-flash');
 
 
 const signupRoutes = require('./route/signupRoute')
 const headerRoutes = require('./route/headersRoute')
 
-mongoose.connect('mongodb+srv://SaankhyaKatari:SaankhyaKatari27@mongodb-practice.xhgwvkd.mongodb.net/DataConversion?retryWrites=true&w=majority')
-mongoose.set("strictQuery", true);
+// mongoose.connect('mongodb+srv://SaankhyaKatari:SaankhyaKatari27@mongodb-practice.xhgwvkd.mongodb.net/DataConversion?retryWrites=true&w=majority')
+// mongoose.set("strictQuery", true);s
+
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -18,8 +21,17 @@ app.use(cors({
     origin: '*'
 }))
 
+app.use(flash());
+app.use(bodyParser.json());
+app.use(session({ 
+    secret: '123456catr',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 }
+}));
 
-app.use('/', signupRoutes)
+
+app.use('/auth', signupRoutes)
 app.use('/header', headerRoutes)
 
 
