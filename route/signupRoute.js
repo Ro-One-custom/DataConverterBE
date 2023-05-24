@@ -194,12 +194,13 @@ router.post('/signin', (req, res) => {
 
     const sql = `SELECT * FROM  data_converter.signup_data WHERE email = "${email}"`
     con.query(sql, (err, result) => {
+        const data = JSON.parse(JSON.stringify(result))
         if (!err) {
-            const data = JSON.parse(JSON.stringify(result))
             console.log(data)
             if (data[0].password === password) {
                 return res.json({
-                    message: "Record Found and Login Successfull"
+                    message: "Record Found and Login Successfull",
+                    details:data
                 })
             } else {
                 return res.json({
