@@ -5,15 +5,17 @@ var con = mysql.createConnection({
     host: "localhost",
     user: "saanUser",
     password: "saan27",
-    database:"data_converter"
+    database: "data_converter"
 });
 
 con.connect((err) => {
     if (err) throw err;
     console.log("Connected!");
-    // con.query("CREATE DATABASE templates", (err, result) => {
+    // var sql = "ALTER TABLE headers ADD CONSTRAINT fileName FOREIGN KEY (fileName) REFERENCES template (fileName) ON DELETE CASCADE;"
+    // // var sql = "ALTER TABLE template ADD INDEX idx_headers (headers)"   // to add the index . 
+    // con.query(sql, (err, result) => {
     //     if (err) throw err;
-    //     console.log("Database Created")
+    //     console.log("Qurey Executed")
     // })
 });
 
