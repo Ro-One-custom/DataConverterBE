@@ -1,5 +1,4 @@
 const express = require('express')
-// const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express()
@@ -9,9 +8,6 @@ const flash = require('connect-flash');
 
 const signupRoutes = require('./route/signupRoute')
 const headerRoutes = require('./route/headersRoute')
-
-// mongoose.connect('mongodb+srv://SaankhyaKatari:SaankhyaKatari27@mongodb-practice.xhgwvkd.mongodb.net/DataConversion?retryWrites=true&w=majority')
-// mongoose.set("strictQuery", true);s
 
 
 
