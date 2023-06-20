@@ -19,7 +19,7 @@ app.use(cors({
 
 app.use(flash());
 app.use(bodyParser.json());
-app.use(session({ 
+app.use(session({
     secret: '123456catr',
     resave: false,
     saveUninitialized: true,
@@ -29,7 +29,5 @@ app.use(session({
 
 app.use('/auth', signupRoutes)
 app.use('/header', headerRoutes)
-
-
 
 module.exports = app

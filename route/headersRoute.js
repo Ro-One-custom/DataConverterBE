@@ -14,9 +14,10 @@ router.post('/addheader', (req, res) => {
     const fileType = req.body.fileType;
     const fileFormat = req.body.fileFormat;
     const headersArray = req.body.headersArray
+    const department = req.body.department
 
 
-    const templateQuery = `INSERT INTO template (fileName, fileType, fileFormat) VALUES ("${fileName}" , "${fileType}" , "${fileFormat}")`;
+    const templateQuery = `INSERT INTO template (fileName, fileType, fileFormat, department) VALUES ("${fileName}" , "${fileType}" , "${fileFormat}" , "${department}")`;
 
     con.query(templateQuery, (err, templateResult) => {
         if (err) {
@@ -44,11 +45,11 @@ router.post('/addheader', (req, res) => {
 
 
 
-router.get('/allfiles/:type', (req, res) => {
+router.get('/allfiles/:key', (req, res) => {
 
-    const filetype = req.params.type
+    const key = req.params.key
 
-    const sql = `SELECT * FROM template WHERE template.fileType = "${filetype}" `
+    const sql = `SELECT * FROM template WHERE template.fileType = "${key}"  OR template.department = "${key}"`
     con.query(sql, (err, result) => {
         if (!err) {
             if (!result.length !== 0) {
@@ -104,6 +105,8 @@ router.get('/allfiles', (req, res) => {
     })
 
 })
+
+
 
 router.get('/allheaders', (req, res) => {
 
@@ -178,9 +181,10 @@ router.post('/addmapping', (req, res) => {
     const ipFile = req.body.ipFile
     const opFile = req.body.opFile
     const mappedHeaders = JSON.stringify(req.body.mappedHeaders)
+    const department = req.body.department
 
-    const sql = `INSERT INTO data_converter.mapping (ipFile, opFile, mappedHeaders) VALUES (? , ? , ?)`
-    const values = [ipFile, opFile, mappedHeaders]
+    const sql = `INSERT INTO data_converter.mapping (ipFile, opFile, mappedHeaders, department) VALUES (? , ? , ?, ?)`
+    const values = [ipFile, opFile, mappedHeaders, department]
     console.log(mappedHeaders)
     con.query(sql, values, (err, result) => {
         if (!err) {
@@ -209,26 +213,20 @@ router.post('/addmapping', (req, res) => {
 
 
 
-router.get('/mapping/:name', (req, res) => {
+router.get('/mapping/:key', (req, res) => {
 
-    const fileName = req.params.name
+    const key = req.params.key
 
-    const sql = `SELECT * FROM data_converter.mapping WHERE mapping.ipFile = "${fileName}" OR mapping.opFile = "${fileName}" `
+    const sql = `SELECT ipFile FROM data_converter.mapping WHERE mapping.department = "${key}"`
     con.query(sql, (err, result) => {
         const finalResult = JSON.parse(JSON.stringify(result))
-        const data = finalResult[0].mappedHeaders
-        const parsedData = JSON.parse(data)
-        console.log(parsedData.Age)
-
-
 
         if (!err) {
             if (!result.length !== 0) {
                 console.log("Records retrieved")
 
                 return res.status(201).json({
-                    data: finalResult,
-                    mappedHeaders: parsedData
+                    mappingData: finalResult
                 })
 
             } else {
@@ -246,6 +244,38 @@ router.get('/mapping/:name', (req, res) => {
     })
 })
 
+
+router.post('/getmapping', (req, res) => {
+
+    const ipFilekey = req.body.ipFilekey
+    const departmentkey = req.body.departmentkey
+
+    const sql = `SELECT opFile FROM data_converter.mapping WHERE mapping.ipFile = "${ipFilekey}" AND mapping.department = "${departmentkey}"`
+    con.query(sql, (err, result) => {
+        const finalResult = JSON.parse(JSON.stringify(result))
+
+        if (!err) {
+            if (!result.length !== 0) {
+                console.log("Records retrieved")
+
+                return res.status(201).json({
+                    mappingData: finalResult
+                })
+
+            } else {
+                return res.json({
+                    message: "No records found"
+                })
+            }
+        } else {
+            console.log("Records not  retrived")
+            return res.status(500).json({
+                message: "Error retrieving records",
+                error: err
+            })
+        }
+    })
+})
 
 
 router.post('/usermapping', (req, res) => {
@@ -284,7 +314,41 @@ router.post('/usermapping', (req, res) => {
     })
 })
 
+router.get('/getmappings/:key', (req, res) => {
 
+   const key = req.params.key
+
+    const sql = `SELECT * FROM data_converter.mapping WHERE mapping.department = "${key}"  `
+    con.query(sql, (err, result) => {
+        const finalResult = JSON.parse(JSON.stringify(result))
+        const data = finalResult[0].mappedHeaders
+        const parsedData = JSON.parse(data)
+
+
+        if (!err) {
+            if (!result.length !== 0) {
+                // console.log("Records retrieved")
+                return res.json({
+                    mappingData:finalResult,
+                    mappedHeaders: parsedData,
+
+                })
+
+
+            } else {
+                return res.json({
+                    message: "No records found"
+                })
+            }
+        } else {
+            console.log(err)
+            return res.status(500).json({
+                message: "Error retrieving records",
+                error: err
+            })
+        }
+    })
+})
 
 
 

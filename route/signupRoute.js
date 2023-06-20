@@ -38,15 +38,16 @@ router.post('/signup', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     const mobile = req.body.mobile;
-    const role = req.body.role
+    const role = req.body.role;
+    const department = req.body.department;
 
-    const sql = `INSERT INTO data_converter.signup_data (firstName,lastname,email,password,mobile,role) VALUES ("${firstName}" , "${lastName}" , "${email}" , "${password}" , "${mobile}",  "${role}")`
+    const sql = `INSERT INTO data_converter.signup_data (firstName,lastname,email,password,mobile,role,department) VALUES ("${firstName}" , "${lastName}" , "${email}" , "${password}" , "${mobile}",  "${role}",  "${department}")`
     con.query(sql, (err, result) => {
         if (!err) {
             console.log("Record Inserted")
             return res.json({
                 message: "Record Inserted",
-                details: data
+                details: result
             })
         } else {
             console.log("Record not inserted")
