@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
 const flash = require('connect-flash');
+const nodemailer = require('nodemailer')
 
 router.use(flash());
 router.use(express.json());
@@ -120,21 +121,22 @@ router.post('/signin', (req, res) => {
     con.query(sql, (err, result) => {
         const data = JSON.parse(JSON.stringify(result))
         if (!err) {
-            if(data.length === 0 ){
-                return res.json({
+            if (data.length === 0) {
+                return res.status(401).json({
                     message: "Please check your email"
                 })
-            }else{
-            if (data[0].password === password) {
-                return res.json({
-                    message: "Record Found and Login Successfull",
-                    details: data
-                })
             } else {
-                return res.json({
-                    message: "Please check your password"
-                })
-            }}
+                if (data[0].password === password) {
+                    return res.status(201).json({
+                        message: "Record Found and Login Successfull",
+                        details: data
+                    })
+                } else {
+                    return res.status(501).json({
+                        message: "Please check your password"
+                    })
+                }
+            }
         } else {
             console.log("Records not  found")
             return res.status(500).json({
@@ -170,6 +172,37 @@ router.put('/editprofile', (req, res) => {
         });
 })
 
+
+router.post('/contactus', (req, res, next) => {
+
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+
+        auth: {
+            user: 'jayadeepsaim@gmail.com',
+            pass: 'ysezntzlhcaswzlb'
+        }
+
+    })
+    var mailOptions = {
+
+        from: 'jayadeepsaim@gmail.com',
+        to: 'jayadeepsaim@gmail.com',
+        subject: "Queries",
+        text: req.body.text,
+
+    }
+
+    transporter.sendMail(mailOptions, function (err, info) {
+        if (err) {
+            return console.log(err);
+        }
+        else {
+            console.log("Email Sent" + info.response)
+        }
+    })
+
+});
 
 
 module.exports = router

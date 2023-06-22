@@ -316,21 +316,22 @@ router.post('/usermapping', (req, res) => {
 
 router.get('/getmappings/:key', (req, res) => {
 
-   const key = req.params.key
+    const key = req.params.key
 
     const sql = `SELECT * FROM data_converter.mapping WHERE mapping.department = "${key}"  `
     con.query(sql, (err, result) => {
         const finalResult = JSON.parse(JSON.stringify(result))
-        const data = finalResult[0].mappedHeaders
-        const parsedData = JSON.parse(data)
+
+        const parsedMappingData = finalResult.map((data) => ({
+            ...data,
+            mappedHeaders: JSON.parse(data.mappedHeaders)
+        }));
 
 
         if (!err) {
             if (!result.length !== 0) {
-                // console.log("Records retrieved")
                 return res.json({
-                    mappingData:finalResult,
-                    mappedHeaders: parsedData,
+                    mappingData: parsedMappingData
 
                 })
 
