@@ -118,10 +118,8 @@ router.post('/signin', (req, res) => {
 
     const sql = `SELECT * FROM  data_converter.signup_data WHERE email = "${email}"`
     con.query(sql, (err, result) => {
-        console.log(result)
         const data = JSON.parse(JSON.stringify(result))
         if (!err) {
-            console.log(data)
             if(data.length === 0 ){
                 return res.json({
                     message: "Please check your email"
