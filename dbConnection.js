@@ -2,7 +2,8 @@ var mysql = require('mysql');
 
 
 var con = mysql.createConnection({
-    host: "dull-lime-dolphin-shoe.cyclic.app",
+    // host: "dull-lime-dolphin-shoe.cyclic.app",
+    host: "localhost",
     user: "saanUser",
     password: "saan27",
     database: "data_converter"

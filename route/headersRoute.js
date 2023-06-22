@@ -22,7 +22,7 @@ router.post('/addheader', (req, res) => {
     con.query(templateQuery, (err, templateResult) => {
         if (err) {
             console.error("Error inserting record in Template table:", err);
-            return res.status(500).json({ message: "Error inserting record in Template table" });
+            return res.status(401).json({ message: "Error inserting record in Template table" });
         }
 
         console.log("Record inserted in Template table");
@@ -34,11 +34,11 @@ router.post('/addheader', (req, res) => {
         con.query(headerQuery, [headerValues], (err, headerResult) => {
             if (err) {
                 console.error("Error inserting record in Headers table:", err);
-                return res.status(500).json({ message: "Error inserting record in Headers table", err });
+                return res.status(400).json({ message: "Error inserting record in Headers table", err });
             }
 
             console.log("Records inserted in Headers table");
-            return res.json({ message: "Records inserted successfully", headerValues });
+            return res.status(200).json({ message: "Records inserted successfully", headerValues });
         });
     });
 });
