@@ -53,8 +53,7 @@ router.get('/allfiles/:key', (req, res) => {
     con.query(sql, (err, result) => {
         if (!err) {
             if (!result.length !== 0) {
-                // console.log("Records retrieved")
-                // console.log(result)
+
                 return res.json({
                     message: "Records Retrieved",
                     fileTypeDetails: result
@@ -351,6 +350,42 @@ router.get('/getmappings/:key', (req, res) => {
     })
 })
 
+
+router.post('/getmappedHeaders', (req, res) => {
+
+    const dept = req.body.dept;
+    const ip = req.body.ip;
+    const op = req.body.op
+
+
+    const sql = `SELECT mappedHeaders FROM data_converter.mapping WHERE mapping.department = "${dept}" &&  mapping.ipFile = "${ip}" && mapping.opFile = "${op}"`
+    con.query(sql, (err, result) => {
+        const finalResult = JSON.parse(JSON.stringify(result))
+
+        const parsedMappingData = JSON.parse(finalResult[0].mappedHeaders)
+
+        if (!err) {
+            if (!result.length !== 0) {
+                return res.json({
+                    mappingData: parsedMappingData
+
+                })
+
+
+            } else {
+                return res.json({
+                    message: "No records found"
+                })
+            }
+        } else {
+            console.log(err)
+            return res.status(500).json({
+                message: "Error retrieving records",
+                error: err
+            })
+        }
+    })
+})
 
 
 module.exports = router

@@ -122,17 +122,17 @@ router.post('/signin', (req, res) => {
         const data = JSON.parse(JSON.stringify(result))
         if (!err) {
             if (data.length === 0) {
-                return res.status(401).json({
+                return res.status(201).json({
                     message: "Please check your email"
                 })
             } else {
                 if (data[0].password === password) {
-                    return res.status(201).json({
+                    return res.status(200).json({
                         message: "Record Found and Login Successfull",
                         details: data
                     })
                 } else {
-                    return res.status(501).json({
+                    return res.status(202).json({
                         message: "Please check your password"
                     })
                 }
