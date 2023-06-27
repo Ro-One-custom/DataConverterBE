@@ -25,11 +25,8 @@ router.post('/addheader', (req, res) => {
             return res.status(401).json({ message: "Error inserting record in Template table" });
         }
 
-        console.log("Record inserted in Template table");
-
         const headerValues = headersArray.map(header => [fileName, header.headerValue]);
         const headerQuery = `INSERT INTO headers (fileName, headerValues) VALUES ?`;
-        console.log(headerValues)
 
         con.query(headerQuery, [headerValues], (err, headerResult) => {
             if (err) {
@@ -37,7 +34,6 @@ router.post('/addheader', (req, res) => {
                 return res.status(400).json({ message: "Error inserting record in Headers table", err });
             }
 
-            console.log("Records inserted in Headers table");
             return res.status(200).json({ message: "Records inserted successfully", headerValues });
         });
     });
@@ -64,7 +60,6 @@ router.get('/allfiles/:key', (req, res) => {
                 })
             }
         } else {
-            console.log("Records not  retrived")
             return res.status(500).json({
                 message: "Error retrieving records",
                 error: err
@@ -77,14 +72,11 @@ router.get('/allfiles/:key', (req, res) => {
 
 router.get('/allfiles', (req, res) => {
 
-    // const filetype = req.params.type
 
     const sql = `SELECT * FROM template `
     con.query(sql, (err, result) => {
         if (!err) {
             if (!result.length !== 0) {
-                // console.log("Records retrieved")
-                // console.log(result)
                 return res.json({
                     message: "Records Retrieved",
                     fileTypeDetails: result
@@ -95,7 +87,6 @@ router.get('/allfiles', (req, res) => {
                 })
             }
         } else {
-            console.log("Records not  retrived")
             return res.status(500).json({
                 message: "Error retrieving records",
                 error: err
@@ -113,8 +104,6 @@ router.get('/allheaders', (req, res) => {
     con.query(sql, (err, result) => {
         if (!err) {
             if (!result.length !== 0) {
-                // console.log("Records retrieved")
-                // console.log(result)
                 return res.json({
                     message: "Records Retrieved",
                     headersDetails: result
@@ -125,7 +114,6 @@ router.get('/allheaders', (req, res) => {
                 })
             }
         } else {
-            console.log("Records not  retrived")
             return res.status(500).json({
                 message: "Error retrieving records",
                 error: err
@@ -146,13 +134,10 @@ router.get('/allheaders/:name', (req, res) => {
     con.query(sql, (err, result) => {
         if (!err) {
             if (!result.length !== 0) {
-                // console.log("Records retrieved")
                 const finalResult = JSON.parse(JSON.stringify(result))
-                // console.log(finalResult)
                 const filteredData = finalResult.filter((obj) => {
                     return (obj.fileName === filterkey || obj.fileType === filterkey)
                 })
-                // console.log(filteredData)
                 return res.json({
                     message: "Records Retrieved",
                     headersDetails: filteredData
@@ -163,7 +148,7 @@ router.get('/allheaders/:name', (req, res) => {
                 })
             }
         } else {
-            console.log("Records not  retrived")
+
             return res.status(500).json({
                 message: "Error retrieving records",
                 error: err
@@ -184,12 +169,9 @@ router.post('/addmapping', (req, res) => {
 
     const sql = `INSERT INTO data_converter.mapping (ipFile, opFile, mappedHeaders, department) VALUES (? , ? , ?, ?)`
     const values = [ipFile, opFile, mappedHeaders, department]
-    console.log(mappedHeaders)
     con.query(sql, values, (err, result) => {
         if (!err) {
             if (!result.length !== 0) {
-                console.log("Records Inserted")
-                console.log(result)
                 return res.json({
                     message: "Records Inserted",
                     headersDetails: result
@@ -200,7 +182,6 @@ router.post('/addmapping', (req, res) => {
                 })
             }
         } else {
-            console.log("Records not inserted")
             return res.status(500).json({
                 message: "Error inserting records",
                 error: err
@@ -222,7 +203,6 @@ router.get('/mapping/:key', (req, res) => {
 
         if (!err) {
             if (!result.length !== 0) {
-                console.log("Records retrieved")
 
                 return res.status(201).json({
                     mappingData: finalResult
@@ -234,7 +214,6 @@ router.get('/mapping/:key', (req, res) => {
                 })
             }
         } else {
-            console.log("Records not  retrived")
             return res.status(500).json({
                 message: "Error retrieving records",
                 error: err
@@ -255,7 +234,6 @@ router.post('/getmapping', (req, res) => {
 
         if (!err) {
             if (!result.length !== 0) {
-                console.log("Records retrieved")
 
                 return res.status(201).json({
                     mappingData: finalResult
@@ -267,7 +245,6 @@ router.post('/getmapping', (req, res) => {
                 })
             }
         } else {
-            console.log("Records not  retrived")
             return res.status(500).json({
                 message: "Error retrieving records",
                 error: err
@@ -285,14 +262,12 @@ router.post('/usermapping', (req, res) => {
     const sql = `SELECT * FROM data_converter.mapping WHERE mapping.ipFile = "${ipFileName}" AND mapping.opFile = "${opFileName}" `
     con.query(sql, (err, result) => {
         const finalResult = JSON.parse(JSON.stringify(result))
-        console.log(finalResult)
         const data = finalResult[0].mappedHeaders
         const parsedData = JSON.parse(data)
 
 
         if (!err) {
             if (!result.length !== 0) {
-                console.log("Records retrieved")
                 return res.json({
                     mappedHeaders: parsedData
                 })
@@ -304,7 +279,6 @@ router.post('/usermapping', (req, res) => {
                 })
             }
         } else {
-            console.log(err)
             return res.status(500).json({
                 message: "Error retrieving records",
                 error: err
@@ -341,7 +315,6 @@ router.get('/getmappings/:key', (req, res) => {
                 })
             }
         } else {
-            console.log(err)
             return res.status(500).json({
                 message: "Error retrieving records",
                 error: err
@@ -378,7 +351,6 @@ router.post('/getmappedHeaders', (req, res) => {
                 })
             }
         } else {
-            console.log(err)
             return res.status(500).json({
                 message: "Error retrieving records",
                 error: err

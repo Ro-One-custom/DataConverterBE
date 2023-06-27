@@ -45,13 +45,11 @@ router.post('/signup', (req, res) => {
     const sql = `INSERT INTO data_converter.signup_data (firstName,lastname,email,password,mobile,role,department) VALUES ("${firstName}" , "${lastName}" , "${email}" , "${password}" , "${mobile}",  "${role}",  "${department}")`
     con.query(sql, (err, result) => {
         if (!err) {
-            console.log("Record Inserted")
             return res.json({
                 message: "Record Inserted",
                 details: result
             })
         } else {
-            console.log("Record not inserted")
             return res.status(500).json({
                 message: "Record not inserted",
                 error: err
@@ -70,13 +68,12 @@ router.get('/allusers', (req, res) => {
     const sql = `SELECT * FROM  data_converter.signup_data`
     con.query(sql, (err, result) => {
         if (!err) {
-            console.log("Records retrieved")
             return res.json({
                 message: "Records Retrieved",
                 details: result
             })
         } else {
-            console.log("Records not  retrived")
+            ("Records not  retrived")
             return res.status(500).json({
                 message: "Error retrieving records",
                 error: err
@@ -93,13 +90,13 @@ router.get('/allusers/:name', (req, res) => {
     const sql = `SELECT * FROM  data_converter.signup_data WHERE email = "${key}"`
     con.query(sql, (err, result) => {
         if (!err) {
-            console.log("Records retrieved")
+            ("Records retrieved")
             return res.json({
                 message: "Records Retrieved",
                 details: result
             })
         } else {
-            console.log("Records not  retrived")
+            ("Records not  retrived")
             return res.status(500).json({
                 message: "Error retrieving records",
                 error: err
@@ -138,7 +135,7 @@ router.post('/signin', (req, res) => {
                 }
             }
         } else {
-            console.log("Records not  found")
+            ("Records not  found")
             return res.status(500).json({
                 message: "Error retrieving record",
                 error: err
@@ -158,12 +155,12 @@ router.put('/editprofile', (req, res) => {
             if (!err) {
                 var data = JSON.parse(JSON.stringify(result));
                 var updatedata = data
-                console.log(updatedata)
+                    (updatedata)
                 res.status(200).json({
                     data: updatedata,
                     message: "Data Updated"
                 })
-                console.log('Data is updated');
+                    ('Data is updated');
             } else {
                 res.status(400).json({
                     message: err
@@ -195,10 +192,10 @@ router.post('/contactus', (req, res, next) => {
 
     transporter.sendMail(mailOptions, function (err, info) {
         if (err) {
-            return console.log(err);
+            return (err);
         }
         else {
-            console.log("Email Sent" + info.response)
+            ("Email Sent" + info.response)
         }
     })
 
