@@ -167,6 +167,7 @@ router.post('/addmapping', (req, res) => {
     const mappedHeaders = JSON.stringify(req.body.mappedHeaders)
     const department = req.body.department
 
+
     const sql = `INSERT INTO data_converter.mapping (ipFile, opFile, mappedHeaders, department) VALUES (? , ? , ?, ?)`
     const values = [ipFile, opFile, mappedHeaders, department]
     con.query(sql, values, (err, result) => {

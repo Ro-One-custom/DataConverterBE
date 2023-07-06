@@ -170,6 +170,29 @@ router.put('/editprofile', (req, res) => {
 })
 
 
+
+
+router.delete('/delteuser/:mobile', async (req, res) => {
+    const mblNo = (req.params.mobile)
+    con.query('DELETE FROM signup_data WHERE `mobile`=?', mblNo, function (err, results, fields) {
+        if (!err) {
+            var data = JSON.parse(JSON.stringify(results));
+            var deletedata = data
+            console.log(deletedata)
+            res.status(200).json({
+                data: deletedata,
+                message: "Data Deleted"
+            })
+            console.log('Data is Deleted');
+        } else {
+            res.status(400).json({
+                message: err
+            })
+        }
+    });
+});
+
+
 router.post('/contactus', (req, res, next) => {
 
     var transporter = nodemailer.createTransport({
