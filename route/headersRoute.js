@@ -167,28 +167,44 @@ router.post('/addmapping', (req, res) => {
     const mappedHeaders = JSON.stringify(req.body.mappedHeaders)
     const department = req.body.department
 
-
-    const sql = `INSERT INTO data_converter.mapping (ipFile, opFile, mappedHeaders, department) VALUES (? , ? , ?, ?)`
-    const values = [ipFile, opFile, mappedHeaders, department]
-    con.query(sql, values, (err, result) => {
+    const checkQuery = 'SELECT opFile FROM data_converter.mapping WHERE department = ? AND ipFile = ?';
+    const val = [department, ipFile]
+    con.query(checkQuery, val, (err, result) => {
         if (!err) {
-            if (!result.length !== 0) {
-                return res.json({
-                    message: "Records Inserted",
-                    headersDetails: result
+            const data = JSON.parse(JSON.stringify(result));
+            if (data.length !== 0 && data.some(obj => obj.opFile === opFile)) {
+                return res.status(400).json({
+                    message: "This mapping already exists!!Please create a new mapping"
                 })
             } else {
-                return res.json({
-                    message: "No record imserted"
+                const sql = `INSERT INTO data_converter.mapping (ipFile, opFile, mappedHeaders, department) VALUES (? , ? , ?, ?)`
+                const values = [ipFile, opFile, mappedHeaders, department]
+                con.query(sql, values, (err, result) => {
+                    if (!err) {
+                        if (!result.length !== 0) {
+                            return res.json({
+                                message: "Records Inserted",
+                                headersDetails: result
+                            })
+                        } else {
+                            return res.json({
+                                message: "No record imserted"
+                            })
+                        }
+                    } else {
+                        return res.status(500).json({
+                            message: "Error inserting records",
+                            error: err
+                        })
+                    }
                 })
             }
+
         } else {
-            return res.status(500).json({
-                message: "Error inserting records",
-                error: err
-            })
+            console.log('ERROR', err)
         }
-    })
+
+    });
 })
 
 
